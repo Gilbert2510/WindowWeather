@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,9 +34,10 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CitySearchActivity extends AppCompatActivity {
+public class CitySearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private List<CitySearch> searchList;
     private List<CityHot> cityHotList;
+    private ArrayAdapter<CitySearch> searchAdapter;
     //搜索界面控件
     private ListView searchListView;
     private TextView searchTitle;
@@ -52,9 +53,9 @@ public class CitySearchActivity extends AppCompatActivity {
          */
         SearchView citySearchView = findViewById(R.id.city_search_searchView);
         Button citySearchBack = findViewById(R.id.city_search_back);
-        searchListView=findViewById(R.id.activity_search_listview);
-        searchTitle=findViewById(R.id.activity_search_title);
-        searchRecycleView=findViewById(R.id.activity_search_recyclerview);
+        searchListView = findViewById(R.id.activity_search_listview);
+        searchTitle = findViewById(R.id.activity_search_title);
+        searchRecycleView = findViewById(R.id.activity_search_recyclerview);
 
         /**
          * 设置上方返回按钮监听器
@@ -72,49 +73,40 @@ public class CitySearchActivity extends AppCompatActivity {
          * 响应搜索系统action进行查找
          * 此时显示从服务器搜索得到的数据
          */
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("query", query);
+        searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, searchList);
+        searchListView.setAdapter(searchAdapter);
+        //设置ListView启用过滤
+        searchListView.setTextFilterEnabled(true);
+        //设置该SearchView默认是否自动缩小为图标
+        citySearchView.setIconifiedByDefault(false);
+        citySearchView.setOnQueryTextListener(this);
 
-            //todo
-
-            searchList=LitePal.where("cityName = ?",query).find(CitySearch.class);
-            if(searchList==null) {
-                searchList=new ArrayList<>();
-                queryCitySearch(this,query);
+        /**
+         * 设置搜索城市列表的监听器
+         * 当点击时返回管理界面
+         */
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CitySearch search = searchAdapter.getItem(position);
+                Intent intent = new Intent(view.getContext(), CityManageActivity.class);
+                intent.putExtra("searchCityId", search.getCityId());
+                startActivity(intent);
+                finish();
             }
-            ArrayAdapter<CitySearch> adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,searchList);
-            ListView searchListView=findViewById(R.id.activity_search_listview);
-            searchListView.setAdapter(adapter);
-            showSearch();
-            /**
-             * 设置搜索城市列表的监听器
-             * 当点击时返回管理界面
-             */
-            searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CitySearch search= adapter.getItem(position);
-                    Intent intent=new Intent(view.getContext(), CityManageActivity.class);
-                    intent.putExtra("searchCityId",search.getCityId());
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        }
+        });
 
         /**
          * 显示热门城市列表
          * 当查询数据库不为空是直接查询热门城市数据库并显示，否则显示查询服务器返回的数据
          */
-        cityHotList=LitePal.findAll(CityHot.class);
-        if(cityHotList==null) {
+        cityHotList = LitePal.findAll(CityHot.class);
+        if (cityHotList == null) {
             queryCityHot(this);
-            cityHotList=new ArrayList<>();
+            cityHotList = new ArrayList<>();
         }
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,3,LinearLayoutManager.VERTICAL,false);
-        HotCityAdapter hotAdapter=new HotCityAdapter(cityHotList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
+        HotCityAdapter hotAdapter = new HotCityAdapter(cityHotList);
         searchRecycleView.setLayoutManager(gridLayoutManager);
         searchRecycleView.setAdapter(hotAdapter);
         /**
@@ -124,14 +116,42 @@ public class CitySearchActivity extends AppCompatActivity {
         hotAdapter.setOnItemClickListener(new HotCityAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String id=cityHotList.get(position).getCityId();
-                Intent intent=new Intent(view.getContext(), CityManageActivity.class);
-                intent.putExtra("searchCityId",id);
+                String id = cityHotList.get(position).getCityId();
+                Intent intent = new Intent(view.getContext(), CityManageActivity.class);
+                intent.putExtra("searchCityId", id);
                 startActivity(intent);
                 finish();
             }
         });
 
+    }
+
+    /**
+     * 用户输入字符时激发该方法
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        //如果newText不是长度为0的字符串
+        if(TextUtils.isEmpty(newText)) {
+            //清除ListView的过滤
+            searchListView.clearTextFilter();
+            searchAdapter.getFilter().filter("");
+            hideSearch();
+        } else {
+            //使用用户输入的内容对ListView的列表项进行过滤
+            //searchListView.setFilterText(newText)
+            searchAdapter.getFilter().filter(newText);
+        }
+        return true;
+    }
+
+    /**
+     * 单击搜索按钮时激发该方法
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        searchAdapter.getFilter().filter(query);
+        return true;
     }
 
     /**
@@ -141,68 +161,68 @@ public class CitySearchActivity extends AppCompatActivity {
         //toDo
     }
 
-    /**
-     * 显示查询城市的结果
-     */
-    public void showCityInfo(GeoBean geoBean) {
-        List<GeoBean.LocationBean> locationBeanList=geoBean.getLocationBean();
-        CitySearch city=new CitySearch();
-        //第一次搜索服务器的数据存入数据库
-        for(GeoBean.LocationBean bean:locationBeanList) {
-            String name=bean.getName();
-            String adm2=bean.getAdm2();
-            String adm1=bean.getAdm1();
-            String country=bean.getCountry();
-            String areaName=name+"-"+adm2+"-"+adm1+"-"+country;
-            city.setCityId(bean.getId());
-            city.setCityName(name);
-            city.setCityAdm2(adm2);
-            city.setCityAdm1(adm1);
-            city.setCityCountry(country);
-            city.setAreaName(areaName);
-            searchList.add(city);
-            city.save();
-        }
-    }
-
-    /**
-     * 查询城市
-     */
-    public void queryCitySearch(Context context, String location) {
-        QWeather.getGeoCityLookup(context, location, new QWeather.OnResultGeoListener() {
-            public static final String TAG = "city_search";
-
-            @Override
-            public void onError(Throwable throwable) {
-                Log.i(TAG, "on error: ", throwable);
-                //System.out.println("City Search Error:"+new Gson());
-                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSuccess(GeoBean geoBean) {
-                Log.i(TAG, "getCity onSuccess: " + new Gson().toJson(geoBean));
-                //System.out.println("获取城市成功"+new Gson().toJson(geoBean));
-                //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
-                if (Code.OK == geoBean.getCode()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showCityInfo(geoBean);
-                        }
-                    });
-                }
-            }
-        });
-    }
+//    /**
+//     * 显示查询城市的结果
+//     */
+//    public void showCityInfo(GeoBean geoBean) {
+//        List<GeoBean.LocationBean> locationBeanList=geoBean.getLocationBean();
+//        CitySearch city=new CitySearch();
+//        //第一次搜索服务器的数据存入数据库
+//        for(GeoBean.LocationBean bean:locationBeanList) {
+//            String name=bean.getName();
+//            String adm2=bean.getAdm2();
+//            String adm1=bean.getAdm1();
+//            String country=bean.getCountry();
+//            String areaName=name+"-"+adm2+"-"+adm1+"-"+country;
+//            city.setCityId(bean.getId());
+//            city.setCityName(name);
+//            city.setCityAdm2(adm2);
+//            city.setCityAdm1(adm1);
+//            city.setCityCountry(country);
+//            city.setAreaName(areaName);
+//            searchList.add(city);
+//            city.save();
+//        }
+//    }
+//
+//    /**
+//     * 查询城市
+//     */
+//    public void queryCitySearch(Context context, String location) {
+//        QWeather.getGeoCityLookup(context, location, new QWeather.OnResultGeoListener() {
+//            public static final String TAG = "city_search";
+//
+//            @Override
+//            public void onError(Throwable throwable) {
+//                Log.i(TAG, "on error: ", throwable);
+//                //System.out.println("City Search Error:"+new Gson());
+//                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onSuccess(GeoBean geoBean) {
+//                Log.i(TAG, "getCity onSuccess: " + new Gson().toJson(geoBean));
+//                //System.out.println("获取城市成功"+new Gson().toJson(geoBean));
+//                //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
+//                if (Code.OK == geoBean.getCode()) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            showCityInfo(geoBean);
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 显示热门城市列表
      */
     public void showHotCityInfo(GeoBean geoBean) {
-        List<GeoBean.LocationBean> locationBeanList=geoBean.getLocationBean();
-        CityHot cityHot=new CityHot();
-        for(GeoBean.LocationBean bean:locationBeanList) {
+        List<GeoBean.LocationBean> locationBeanList = geoBean.getLocationBean();
+        CityHot cityHot = new CityHot();
+        for (GeoBean.LocationBean bean : locationBeanList) {
             cityHot.setCityName(bean.getName());
             cityHot.setCityId(bean.getId());
             //更新数据库

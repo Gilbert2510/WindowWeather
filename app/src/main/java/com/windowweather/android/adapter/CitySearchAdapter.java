@@ -84,12 +84,9 @@ public class CitySearchAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results=new FilterResults();
-            List<CitySearch> list;
-            if(TextUtils.isEmpty(constraint)) {
-                //当过滤的关键字为空的时候，则显示所有的数据
-                list=backSearchList;
-            } else {
-                //否则把符合条件的数据对象添加到集合中
+            List<CitySearch> list=null;
+            if(!TextUtils.isEmpty(constraint)) {
+                //当过滤的关键字不为空的时候，把符合条件的数据对象添加到集合中
                 list=new ArrayList<>();
                 for(CitySearch search:backSearchList) {
                     if(search.getAreaName().contains(constraint)) {
