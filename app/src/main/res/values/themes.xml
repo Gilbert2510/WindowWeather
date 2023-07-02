@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.WindowWeather" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Background.Theme.WindowWeather" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/WhiteSmoke</item><!--浅灰白,title栏背景色-->
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
+    <style name="Theme.WindowWeather" parent="Base.Theme.WindowWeather" />
+
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light">
+        <item name="actionMenuTextColor">@color/white</item> <!--颜色-->
+        <item name="android:textSize">10sp</item> <!--字体大小-->
+    </style>
+</resources>
