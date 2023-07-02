@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/weather_main_uv"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:background="#75000000"
+        android:textColor="@color/white"
+        android:text=" UV 最弱"
+        android:visibility="invisible"
+        android:textSize="15sp" />
+    <TextView
+        android:id="@+id/weather_main_pm25"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/weather_main_uv"
+        android:layout_marginStart="20dp"
+        android:background="#75000000"
+        android:textColor="@color/white"
+        android:visibility="invisible"
+        android:text=" PM 13"
+        android:textSize="15sp" />
+
+    <include layout="@layout/weather_main_now"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_main_pm25" />
+</RelativeLayout>
