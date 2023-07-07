@@ -11,37 +11,40 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.qweather.sdk.bean.Basic;
 import com.qweather.sdk.bean.base.Code;
 import com.qweather.sdk.bean.geo.GeoBean;
+import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
+import com.windowweather.android.adapter.SearchAdapter;
 import com.windowweather.android.adapter.HotCityAdapter;
+import com.windowweather.android.db.City;
 import com.windowweather.android.db.CityHot;
 import com.windowweather.android.db.CitySearch;
 
 import org.litepal.LitePal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CitySearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private List<CitySearch> searchList;
     private List<CityHot> cityHotList;
-    private ArrayAdapter<CitySearch> searchAdapter;
+    private SearchAdapter searchAdapter;
     //搜索界面控件
     private ListView searchListView;
     private TextView searchTitle;
-    private RecyclerView searchRecycleView;
+    private RecyclerView hotRecycleView;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -54,8 +57,8 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
         SearchView citySearchView = findViewById(R.id.city_search_searchView);
         Button citySearchBack = findViewById(R.id.city_search_back);
         searchListView = findViewById(R.id.activity_search_listview);
+        hotRecycleView = findViewById(R.id.activity_search_recyclerview);
         searchTitle = findViewById(R.id.activity_search_title);
-        searchRecycleView = findViewById(R.id.activity_search_recyclerview);
 
         /**
          * 设置上方返回按钮监听器
@@ -73,9 +76,9 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
          * 响应搜索系统action进行查找
          * 此时显示从服务器搜索得到的数据
          */
-        searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, searchList);
+        searchList = LitePal.findAll(CitySearch.class);
+        searchAdapter = new SearchAdapter(this, searchList);
         searchListView.setAdapter(searchAdapter);
-        //设置ListView启用过滤
         searchListView.setTextFilterEnabled(true);
         //设置该SearchView默认是否自动缩小为图标
         citySearchView.setIconifiedByDefault(false);
@@ -88,10 +91,64 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CitySearch search = searchAdapter.getItem(position);
-                Intent intent = new Intent(view.getContext(), CityManageActivity.class);
-                intent.putExtra("searchCityId", search.getCityId());
-                startActivity(intent);
+                CitySearch search = (CitySearch) parent.getAdapter().getItem(position);
+                String cityId = search.getCityId();
+                String cityName = search.getCityName();
+                List<City> list = LitePal.where("cityId = ?", cityId).find(City.class);
+                if (list.size() > 0) {
+                    //此时点击的城市中数据库已经存储
+                    Log.d("choose","启动");
+                    setResult(RESULT_OK);
+                } else {
+                    Intent intent=getIntent();
+                    String str=intent.getStringExtra("main");
+                    if(str!=null) {
+                        QWeather.getWeatherNow(CitySearchActivity.this, cityId, new QWeather.OnResultWeatherNowListener() {
+                            public static final String TAG = "weather_now";
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                Log.i(TAG, "on error: ", throwable);
+                                //System.out.println("Weather Now Error:"+new Gson());
+                                Looper.prepare();
+                                Toast.makeText(CitySearchActivity.this, "连接服务器失败", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }
+
+                            @Override
+                            public void onSuccess(WeatherNowBean weatherNowBean) {
+                                Log.i(TAG, "getWeatherNow onSuccess: " + new Gson().toJson(weatherNowBean));
+                                //System.out.println("获取当前天气成功"+new Gson().toJson(weatherNowBean));
+                                if (Code.OK == weatherNowBean.getCode()) {
+                                    WeatherNowBean.NowBaseBean bean = weatherNowBean.getNow();
+                                    Basic basic = weatherNowBean.getBasic();
+                                    City city;
+                                    //否则添加新的城市项
+                                    city = new City();
+                                    city.setCityName(cityName);
+                                    city.setCityId(cityId);
+                                    city.setFxLink(basic.getFxLink());
+                                    city.setObsTime(bean.getObsTime());
+                                    city.setFeelsLike(bean.getFeelsLike());
+                                    city.setNowTemp(bean.getTemp());
+                                    city.setNowText(bean.getText());
+                                    city.setNowIcon(bean.getIcon());
+                                    city.save();
+                                    Intent intent=new Intent(view.getContext(), WeatherActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+//                        Utility.queryWeatherNow(view.getContext(), cityId, cityName, false);
+
+                    } else {
+                        //数据库没有存储，则存储
+                        intent=new Intent(CitySearchActivity.this, CityManageActivity.class);
+                        intent.putExtra("searchId",cityId);
+                        intent.putExtra("searchName",cityName);
+                        setResult(RESULT_FIRST_USER,intent);
+                    }
+                }
                 finish();
             }
         });
@@ -103,12 +160,13 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
         cityHotList = LitePal.findAll(CityHot.class);
         if (cityHotList == null) {
             queryCityHot(this);
-            cityHotList = new ArrayList<>();
         }
+        cityHotList = LitePal.findAll(CityHot.class);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
+        hotRecycleView.setLayoutManager(gridLayoutManager);
         HotCityAdapter hotAdapter = new HotCityAdapter(cityHotList);
-        searchRecycleView.setLayoutManager(gridLayoutManager);
-        searchRecycleView.setAdapter(hotAdapter);
+        hotRecycleView.setAdapter(hotAdapter);
+
         /**
          * 热门城市列表的监听器
          * 当点击时返回管理界面
@@ -131,15 +189,16 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        //如果newText不是长度为0的字符串
-        if(TextUtils.isEmpty(newText)) {
+        showSearch();
+        //如果newText是长度为0的字符串
+        if (TextUtils.isEmpty(newText)) {
             //清除ListView的过滤
             searchListView.clearTextFilter();
             searchAdapter.getFilter().filter("");
             hideSearch();
         } else {
             //使用用户输入的内容对ListView的列表项进行过滤
-            //searchListView.setFilterText(newText)
+            //searchListView.setFilterText(newText);
             searchAdapter.getFilter().filter(newText);
         }
         return true;
@@ -150,16 +209,15 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        searchAdapter.getFilter().filter(query);
         return true;
     }
 
-    /**
-     * 连接服务器时显示对话框
-     */
-    private void showWaitingDialog() {
-        //toDo
-    }
+//    /**
+//     * 连接服务器时显示对话框
+//     */
+//    private void showWaitingDialog() {
+//        //toDo
+//    }
 
 //    /**
 //     * 显示查询城市的结果
@@ -216,20 +274,6 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
 //        });
 //    }
 
-    /**
-     * 显示热门城市列表
-     */
-    public void showHotCityInfo(GeoBean geoBean) {
-        List<GeoBean.LocationBean> locationBeanList = geoBean.getLocationBean();
-        CityHot cityHot = new CityHot();
-        for (GeoBean.LocationBean bean : locationBeanList) {
-            cityHot.setCityName(bean.getName());
-            cityHot.setCityId(bean.getId());
-            //更新数据库
-            cityHot.save();
-            cityHotList.add(cityHot);
-        }
-    }
 
     /**
      * 查询热门城市
@@ -253,7 +297,14 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showHotCityInfo(geoBean);
+                            List<GeoBean.LocationBean> locationBeanList = geoBean.getLocationBean();
+                            for (GeoBean.LocationBean bean : locationBeanList) {
+                                CityHot cityHot = new CityHot();
+                                cityHot.setCityName(bean.getName());
+                                cityHot.setCityId(bean.getId());
+                                //更新数据库
+                                cityHot.save();
+                            }
                         }
                     });
                 }
@@ -267,7 +318,7 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
     private void showSearch() {
         searchListView.setVisibility(View.VISIBLE);
         searchTitle.setVisibility(View.GONE);
-        searchRecycleView.setVisibility(View.GONE);
+        hotRecycleView.setVisibility(View.GONE);
     }
 
     /**
@@ -276,7 +327,7 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
     private void hideSearch() {
         searchListView.setVisibility(View.GONE);
         searchTitle.setVisibility(View.VISIBLE);
-        searchRecycleView.setVisibility(View.VISIBLE);
+        hotRecycleView.setVisibility(View.VISIBLE);
     }
 
 }

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_manage_area_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -12,38 +11,51 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="18dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="@string/manage_area"
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/manage_area_back"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="25dp"
-            android:layout_gravity="start"
-            android:background="@drawable/back_vector_dark" />
-        <Button
-            android:id="@+id/manage_area_edit"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_gravity="end"
-            android:background="@drawable/city_edit_vector_dark" />
 
-        <Button
-            android:id="@+id/manage_area_insert"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_gravity="end"
-            android:background="@drawable/city_add_vector_dark" />
+            <Button
+                android:id="@+id/manage_area_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/back_vector_dark" />
+
+            <TextView
+                android:id="@+id/manage_area_toolbar_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="18dp"
+                android:text="@string/manage_area"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/manage_area_insert"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="30dp"
+                android:layout_toStartOf="@id/manage_area_edit"
+                android:background="@drawable/city_add_vector_dark" />
+
+            <Button
+                android:id="@+id/manage_area_edit"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/city_edit_vector_dark" />
+
+
+        </RelativeLayout>
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -52,8 +64,8 @@
         android:id="@+id/manage_area_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp">
 
     </androidx.recyclerview.widget.RecyclerView>

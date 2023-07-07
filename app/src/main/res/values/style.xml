@@ -2,10 +2,11 @@
 <resources>
 
     <style name="WeatherToolbarPopupTheme">
-        <item name="android:colorBackground">#ffffff</item>
+        <item name="android:colorBackground">@color/white</item>
         <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
         <item name="android:dropDownWidth">wrap_content</item>
         <item name="android:textColor">@color/black</item>
+        <item name="background">@drawable/shape_corner</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="android:popupMenuStyle">@drawable/more_vector</item>
     </style>
