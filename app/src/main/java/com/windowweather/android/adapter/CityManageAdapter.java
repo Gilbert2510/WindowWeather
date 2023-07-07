@@ -1,5 +1,6 @@
 package com.windowweather.android.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.windowweather.android.R;
 import com.windowweather.android.db.City;
+import com.windowweather.android.util.CurrentDateUtils;
 
 import java.util.List;
 
@@ -90,11 +92,20 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         City city = mCityList.get(position);
         holder.manageItemArea.setText(city.getCityName());
         holder.manageItemTemp.setText(city.getNowTemp());
+//        int currentHour=Integer.parseInt(city.getObsTime().substring(11,12));
+//        if (currentHour >= 5 && currentHour < 18) {
+//            //此时是白天，设置白天天气壁纸
+//            holder.manageItemCardView.setBackgroundColor(R.color.TestColor);
+//        } else {
+//            //此时是夜晚，设置夜晚天气壁纸
+//            holder.manageItemCardView.setBackgroundColor(R.color.JackieBlue);
+//        }
     }
 
     @Override

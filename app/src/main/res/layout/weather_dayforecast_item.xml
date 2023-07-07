@@ -10,13 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="@color/white"
         android:text="06/23" />
     <ImageView
         android:id="@+id/weather_dayforecast_item_img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_margin="7dp"
         android:layout_below="@id/weather_dayforecast_item_date"
         android:layout_centerHorizontal="true" />
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_dayforecast_item_img"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="@color/white"
         android:text="5" />
     <TextView
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_dayforecast_item_max"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="@color/white"
         android:text="10" />
 </RelativeLayout>

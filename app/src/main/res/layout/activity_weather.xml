@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_weather_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#756699FF">
+    android:background="@drawable/main_100">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/weather_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         app:popupTheme="@style/WeatherToolbarPopupTheme">
 
         <TextView
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="@string/test_string"
+            android:text="一 一"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -30,7 +31,6 @@
         android:layout_height="2dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginEnd="20dp"
         android:background="@color/HalfGrey" />
 
@@ -38,8 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:scrollbars="none"
-        android:layout_marginTop="10dp">
+        android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,8 +47,13 @@
             <include layout="@layout/weather_main"
                 android:layout_width="match_parent"
                 android:layout_height="380dp"/>
-            <include layout="@layout/weather_hourforecast" />
-            <include layout="@layout/weather_dayforecast" />
+            <include layout="@layout/weather_hourforecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <include layout="@layout/weather_dayforecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
         </LinearLayout>
 
     </ScrollView>

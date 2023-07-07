@@ -4,5 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="WhiteSmoke">#FFF5F5F5</color>
     <color name="TestColor">#FF3399ff</color>
+    <color name="Grey">#60FFFFFF</color>
     <color name="HalfGrey">#85FFFFFF</color>
+    <color name="Orange">#FFD700</color>
+    <color name="Blue">#4169E1</color>
+    <color name="JackieBlue">#0B1746</color>
 </resources>

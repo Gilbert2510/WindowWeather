@@ -8,56 +8,62 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="30"
+        android:padding="10dp"
+        android:text="--"
         android:textColor="@color/white"
-        android:textSize="120sp"
+        android:textSize="100sp"
         android:textStyle="bold" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/weather_main_now_temp"
         android:layout_alignTop="@id/weather_main_now_temp"
-        android:textSize="27sp"
-        android:textColor="@color/HalfGrey"
+        android:layout_toEndOf="@id/weather_main_now_temp"
         android:text="℃"
+        android:textColor="@color/HalfGrey"
+        android:textSize="25sp"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/weather_main_now_tempText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_main_now_temp"
         android:layout_alignStart="@id/weather_main_now_temp"
-        android:textSize="18sp"
+        android:text="-"
         android:textColor="@color/white"
-        android:text="晴" />
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/weather_main_now_tempBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_main_now_temp"
         android:layout_alignEnd="@id/weather_main_now_temp"
-        android:textSize="20sp"
+        android:text="- ~ - ℃"
         android:textColor="@color/white"
-        android:text="15 ~ 32 ℃" />
+        android:textSize="20sp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_toEndOf="@id/weather_main_now_temp"
         android:layout_above="@id/weather_main_now_feelslike"
-        android:textColor="#C8FFFFFF"
+        android:layout_toEndOf="@id/weather_main_now_temp"
         android:text="体感"
-        android:textSize="15sp" />
+        android:textColor="@color/HalfGrey"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/weather_main_now_feelslike"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_toEndOf="@id/weather_main_now_temp"
         android:layout_alignBottom="@id/weather_main_now_temp"
-        android:textColor="#C8FFFFFF"
-        android:text="29℃"
-        android:textSize="15sp" />
-
-
+        android:layout_toEndOf="@id/weather_main_now_temp"
+        android:text="-℃"
+        android:textColor="@color/HalfGrey"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
