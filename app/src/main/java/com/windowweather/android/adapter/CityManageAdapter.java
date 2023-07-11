@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.ViewHolder> {
     private final List<City> mCityList;
     private static onItemClickListener mClickListener;
+    private final boolean mflag;
 
     /**
      * 为Activity提供设置OnItemClickListener的接口
@@ -42,12 +44,14 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         private final TextView manageItemArea;
         private final TextView manageItemTemp;
         private final CardView manageItemCardView;
+        private final CheckBox manageCheckBox;
 
         public ViewHolder(View view) {
             super(view);
             manageItemArea = view.findViewById(R.id.manage_area_item_area);
             manageItemTemp = view.findViewById(R.id.manage_area_item_temp);
             manageItemCardView = view.findViewById(R.id.manage_area_item_cardview);
+            manageCheckBox=view.findViewById(R.id.manage_area_item_checkbox);
             manageItemCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,11 +82,15 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         public CardView getManageItemCardView() {
             return manageItemCardView;
         }
+        public CheckBox getManageCheckBox() {
+            return manageCheckBox;
+        }
 
     }
 
-    public CityManageAdapter(List<City> mCityList) {
+    public CityManageAdapter(List<City> mCityList,boolean flag) {
         this.mCityList = mCityList;
+        this.mflag=flag;
     }
 
     @NonNull
@@ -98,14 +106,10 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         City city = mCityList.get(position);
         holder.manageItemArea.setText(city.getCityName());
         holder.manageItemTemp.setText(city.getNowTemp());
-//        int currentHour=Integer.parseInt(city.getObsTime().substring(11,12));
-//        if (currentHour >= 5 && currentHour < 18) {
-//            //此时是白天，设置白天天气壁纸
-//            holder.manageItemCardView.setBackgroundColor(R.color.TestColor);
-//        } else {
-//            //此时是夜晚，设置夜晚天气壁纸
-//            holder.manageItemCardView.setBackgroundColor(R.color.JackieBlue);
-//        }
+        if(mflag) {
+            //此时让CheckBox显示
+            holder.manageCheckBox.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

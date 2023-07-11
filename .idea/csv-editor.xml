@@ -10,7 +10,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="C:\Users\10231\Desktop\处理\WindowWeather\pic\City_hot_list.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\src\main\assets\China_city_list_latest.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\app\src\main\assets\City_hot_list.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

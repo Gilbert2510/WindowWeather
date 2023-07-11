@@ -4,8 +4,8 @@
     android:id="@+id/activity_weather_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/main_100">
+    android:background="@drawable/main_100"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/weather_toolbar"
@@ -34,27 +34,49 @@
         android:layout_marginEnd="20dp"
         android:background="@color/HalfGrey" />
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/activity_weather_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_height="match_parent">
 
-            <include layout="@layout/weather_main"
-                android:layout_width="match_parent"
-                android:layout_height="380dp"/>
-            <include layout="@layout/weather_hourforecast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <include layout="@layout/weather_dayforecast"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-    </ScrollView>
+
+                <include
+                    layout="@layout/weather_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="380dp" />
+
+                <include
+                    layout="@layout/weather_hourforecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/weather_dayforecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <include
+                    layout="@layout/weather_other"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>

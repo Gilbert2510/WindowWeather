@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     private Button manageBack;
     private Button manageInsert;
     private Button manageEdit;
+    private CheckBox manageCheckBox;
     private RecyclerView manageRecyclerView;
     private CityManageAdapter cityManageAdapter;
     List<City> cityList;
@@ -95,7 +97,6 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
                             city.setNowText(bean.getText());
                             city.setNowIcon(bean.getIcon());
                             city.save();
-                            Log.d("manage", city.getCityName());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -124,6 +125,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
         manageBack = findViewById(R.id.manage_area_back);
         manageInsert = findViewById(R.id.manage_area_insert);
         manageEdit = findViewById(R.id.manage_area_edit);
+        manageCheckBox=findViewById(R.id.manage_area_item_checkbox);
         manageRecyclerView = findViewById(R.id.manage_area_recyclerview);
 
         //控件设置监听器
@@ -137,7 +139,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
         cityList = LitePal.findAll(City.class);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         manageRecyclerView.setLayoutManager(layoutManager);
-        cityManageAdapter = new CityManageAdapter(cityList);
+        cityManageAdapter = new CityManageAdapter(cityList,false);
         manageRecyclerView.setAdapter(cityManageAdapter);
 
         /**
@@ -148,8 +150,9 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
         cityManageAdapter.setOnItemClickListener(new CityManageAdapter.onItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String id = cityList.get(position).getCityId();
-                String name = cityList.get(position).getCityName();
+                City city=cityList.get(position);
+                String id = city.getCityId();
+                String name = city.getCityName();
                 Intent intent = new Intent(view.getContext(), WeatherActivity.class);
                 intent.putExtra("cityId", id);
                 intent.putExtra("cityName", name);
@@ -229,7 +232,9 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(CityManageActivity.this, CitySearchActivity.class);
             launcher.launch(intent);
         } else if (id == R.id.manage_area_edit) {
-            Toast.makeText(CityManageActivity.this, "正在开发", Toast.LENGTH_SHORT).show();
+            Intent intent=new Intent(CityManageActivity.this,CityManageChangeActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 
