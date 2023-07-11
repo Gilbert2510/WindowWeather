@@ -11,4 +11,8 @@
         <item name="android:popupMenuStyle">@drawable/more_vector</item>
     </style>
 
+    <style name="ManageCheckBox">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
 </resources>

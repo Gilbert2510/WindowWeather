@@ -21,21 +21,20 @@
         android:supportsRtl="true"
         android:theme="@style/Background.Theme.WindowWeather"
         tools:targetApi="31">
-
+        <activity
+            android:name=".CityManageChangeActivity"
+            android:exported="true"
+            android:theme="@style/noAnimationTheme" />
         <activity
             android:name=".CityManageActivity"
             android:exported="true" />
-
         <activity
             android:name=".WeatherActivity"
             android:exported="false" />
-
         <activity
             android:name=".CitySearchActivity"
             android:exported="false"
-            android:launchMode="singleTop">
-        </activity>
-
+            android:launchMode="singleTop" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

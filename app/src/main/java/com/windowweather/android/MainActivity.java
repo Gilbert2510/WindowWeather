@@ -39,15 +39,13 @@ public class MainActivity extends AppCompatActivity {
      * 判断是否是第一次进入程序
      */
     private void isFirst() {
-        SharedPreferences shared = getSharedPreferences("is", MODE_PRIVATE);
-        boolean isfer = shared.getBoolean("isfer", true);
-        SharedPreferences.Editor editor = shared.edit();
         if (LitePal.findFirst(CitySearch.class) == null) {
             //第一次进入加载csv文件
             progressBar.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);
             Connector.getDatabase();
             CsvUtils.readDataCsv(MainActivity.this);
+            CsvUtils.readCityHotCsv(MainActivity.this);
             Intent intent = new Intent(MainActivity.this, CitySearchActivity.class);
             intent.putExtra("main","none");
             startActivity(intent);

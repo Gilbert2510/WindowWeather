@@ -9,4 +9,7 @@
     <color name="Orange">#FFD700</color>
     <color name="Blue">#4169E1</color>
     <color name="JackieBlue">#0B1746</color>
+    <color name="switch_btn_colors">#87AADC</color>
+    <color name="BackGrey">#F4F4F4</color>
+    <color name="LightRed">#FF6347</color>
 </resources>

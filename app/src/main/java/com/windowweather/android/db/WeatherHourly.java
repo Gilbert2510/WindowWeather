@@ -22,6 +22,8 @@ public class WeatherHourly extends LitePalSupport {
     private String hourlyText;
     private String hourlyPop;
     private String hourlyPrecip;
+    private String hourlyIcon;
+    private String hourlyPressure;
 
     public int getId() {
         return id;
@@ -85,5 +87,21 @@ public class WeatherHourly extends LitePalSupport {
 
     public void setHourlyPrecip(String hourlyPrecip) {
         this.hourlyPrecip = hourlyPrecip;
+    }
+
+    public String getHourlyIcon() {
+        return hourlyIcon;
+    }
+
+    public void setHourlyIcon(String hourlyIcon) {
+        this.hourlyIcon = hourlyIcon;
+    }
+
+    public String getHourlyPressure() {
+        return hourlyPressure;
+    }
+
+    public void setHourlyPressure(String hourlyPressure) {
+        this.hourlyPressure = hourlyPressure;
     }
 }

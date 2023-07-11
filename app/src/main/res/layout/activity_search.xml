@@ -24,12 +24,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_toEndOf="@id/city_search_searchView"
             android:text="@string/cancel"
             android:textSize="18sp" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="5dp"
+            android:layout_below="@id/city_search_back"
+            android:layout_alignStart="@id/city_search_back"
+            android:background="@color/LightRed" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -55,19 +61,29 @@
             android:id="@+id/activity_search_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
             android:text="热门城市"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+        <View
+            android:id="@+id/activity_search_titleView"
+            android:layout_width="100dp"
+            android:layout_height="5dp"
+            android:layout_below="@id/activity_search_title"
+            android:layout_alignStart="@id/activity_search_title"
+            android:layout_marginTop="5dp"
+            android:background="@color/LightRed" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_search_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/activity_search_title"
+            android:layout_below="@id/activity_search_titleView"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             app:spanCount="3" />
     </RelativeLayout>

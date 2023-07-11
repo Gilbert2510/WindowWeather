@@ -20,6 +20,7 @@ public class HotCityAdapter extends RecyclerView.Adapter<HotCityAdapter.ViewHold
 
     /**
      * 为Activity提供设置OnItemClickListener的接口
+     *
      * @param itemClickListener
      */
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -47,8 +48,8 @@ public class HotCityAdapter extends RecyclerView.Adapter<HotCityAdapter.ViewHold
                     /**
                      * 使用getTag方法获取点击的item的position
                      */
-                    if(mClickListener != null) {
-                        mClickListener.onItemClick(view,(int)v.getTag());
+                    if (mClickListener != null) {
+                        mClickListener.onItemClick(view, getBindingAdapterPosition());
                     }
                 }
             });

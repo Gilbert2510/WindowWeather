@@ -7,10 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,8 @@ import com.qweather.sdk.bean.weather.WeatherHourlyBean;
 import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
 import com.windowweather.android.db.City;
+import com.windowweather.android.db.WeatherDaily;
+import com.windowweather.android.db.WeatherHourly;
 import com.windowweather.android.util.BarUtils;
 import com.windowweather.android.util.CurrentDateUtils;
 import com.windowweather.android.util.ResourceUtils;
@@ -55,7 +60,8 @@ public class WeatherActivity extends AppCompatActivity {
     private LinearLayout dailyLinearLayout;
     private LinearLayout hourlyLinearLayout;
     private LinearLayout weatherLinearLayout;
-    private int currentHour;
+    private String cityId;
+    private String cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,7 @@ public class WeatherActivity extends AppCompatActivity {
         //标题栏透明
         BarUtils.translucentStatusBar(WeatherActivity.this, true);
         //获取界面组件
+        SwipeRefreshLayout refreshLayout = findViewById(R.id.activity_weather_refresh);
         weatherToolbar = findViewById(R.id.weather_toolbar);
         weatherToolbarTitle = findViewById(R.id.weather_toolbar_title);
         nowTemp = findViewById(R.id.weather_main_now_temp);
@@ -79,6 +86,28 @@ public class WeatherActivity extends AppCompatActivity {
         weatherToolbar.setNavigationIcon(R.drawable.city_add_vector);
 
         /**
+         * 刷新监听器
+         */
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    showNowInfo(cityId, cityName);
+                    queryWeather24H(WeatherActivity.this, cityId, cityName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this, "更新天气成功", Toast.LENGTH_SHORT).show();
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
+
+        /**
          * 读取从城市管理返回的结果，若为RESULT_OK则展示该城市页面
          */
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -87,12 +116,21 @@ public class WeatherActivity extends AppCompatActivity {
                 Intent intent = result.getData();
                 int resultCode = result.getResultCode();
                 if (resultCode == RESULT_OK) {
-                    String cityId = intent.getStringExtra("cityId");
-                    String cityName = intent.getStringExtra("cityName");
+                    assert intent != null;
+                    cityId = intent.getStringExtra("cityId");
+                    cityName = intent.getStringExtra("cityName");
                     //在管理界面选择了城市
                     showNowInfo(cityId, cityName);
-                    queryWeather24H(cityId);
-                    queryWeather7D(cityId);
+                    List<WeatherDaily> dailyList = LitePal.where("cityId = ?", cityId).find(WeatherDaily.class);
+                    if (dailyList.size() > 0) {
+                        //此时数据库存有数据，直接查询
+                        showWeatherDailyInfo(dailyList);
+                    } else {
+                        //否则查询服务器
+                        queryWeather7D(WeatherActivity.this, cityId, cityName);
+                    }
+                    queryWeather24H(WeatherActivity.this, cityId, cityName);
+
                 }
             }
         });
@@ -126,11 +164,11 @@ public class WeatherActivity extends AppCompatActivity {
 
         City city = LitePal.findFirst(City.class);
         if (city != null) {
-            String cityId = city.getCityId();
-            String cityName = city.getCityName();
+            cityId = city.getCityId();
+            cityName = city.getCityName();
             showNowInfo(cityId, cityName);
-            queryWeather24H(cityId);
-            queryWeather7D(cityId);
+            queryWeather24H(WeatherActivity.this, cityId, cityName);
+            queryWeather7D(WeatherActivity.this, cityId, cityName);
         }
 
 
@@ -139,13 +177,6 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentHour >= 5 && currentHour < 18) {
-            //此时是白天，设置白天天气壁纸
-            weatherLinearLayout.setBackgroundResource(R.drawable.main_100);
-        } else {
-            //此时是夜晚，设置夜晚天气壁纸
-            weatherLinearLayout.setBackgroundResource(R.color.JackieBlue);
-        }
     }
 
 
@@ -211,7 +242,14 @@ public class WeatherActivity extends AppCompatActivity {
                             nowTemp.setText(city.getNowTemp());
                             nowTempText.setText(city.getNowText());
                             weatherToolbarTitle.setText(cityName);
-                            currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+                            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+                            if (currentHour >= 5 && currentHour < 18) {
+                                //此时是白天，设置白天天气壁纸
+                                weatherLinearLayout.setBackgroundResource(R.drawable.main_100);
+                            } else {
+                                //此时是夜晚，设置夜晚天气壁纸
+                                weatherLinearLayout.setBackgroundResource(R.color.JackieBlue);
+                            }
                         }
                     });
                 }
@@ -224,20 +262,20 @@ public class WeatherActivity extends AppCompatActivity {
      * 显示小时天气信息
      */
     @SuppressLint("SetTextI18n")
-    public void showWeatherHourlyInfo(WeatherHourlyBean weatherHourlyBean) {
+    public void showWeatherHourlyInfo(List<WeatherHourly> hourlyList) {
         //小时天气类
-        List<WeatherHourlyBean.HourlyBean> dailyBeanList = weatherHourlyBean.getHourly();
 
-        for (WeatherHourlyBean.HourlyBean bean : dailyBeanList) {
+        for (WeatherHourly hourly : hourlyList) {
             View view = LayoutInflater.from(this).inflate(R.layout.weather_hourforecast_item, hourlyLinearLayout, false);
             ImageView hourlyImg = view.findViewById(R.id.weather_hourforecast_item_img);
             TextView hourlyDate = view.findViewById(R.id.weather_hourforecast_item_date);
             TextView hourlyTemp = view.findViewById(R.id.weather_hourforecast_item_temp);
-            int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + bean.getIcon());
+            int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + hourly.getHourlyIcon());
             hourlyImg.setImageResource(id);
-            hourlyDate.setText(bean.getFxTime().substring(11, 16));
-            hourlyTemp.setText(bean.getTemp() + "℃");
+            hourlyDate.setText(hourly.getHourlyFxTime().substring(11, 16));
+            hourlyTemp.setText(hourly.getHourlyTemp() + "℃");
             hourlyLinearLayout.addView(view);
+
         }
 
     }
@@ -245,8 +283,8 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 查询24小时天气
      */
-    public void queryWeather24H(String location) {
-        QWeather.getWeather24Hourly(WeatherActivity.this, location, new QWeather.OnResultWeatherHourlyListener() {
+    public void queryWeather24H(Context context, String location, String cityName) {
+        QWeather.getWeather24Hourly(context, location, new QWeather.OnResultWeatherHourlyListener() {
             public static final String TAG = "weather_hourly";
 
             @Override
@@ -260,10 +298,30 @@ public class WeatherActivity extends AppCompatActivity {
                 Log.i(TAG, "getWeatherHourly onSuccess: " + new Gson().toJson(weatherHourlyBean));
                 //System.out.println("获取小时天气成功"+new Gson().toJson(weatherNowBean));
                 if (Code.OK == weatherHourlyBean.getCode()) {
+                    List<WeatherHourlyBean.HourlyBean> beanList = weatherHourlyBean.getHourly();
+                    List<WeatherHourly> hourlyList = LitePal.findAll(WeatherHourly.class);
+                    if (hourlyList.size() != 0) {
+                        //不为空时删除
+                        LitePal.deleteAll(WeatherHourly.class);
+                    }
+                    for (WeatherHourlyBean.HourlyBean bean : beanList) {
+                        WeatherHourly hourly = new WeatherHourly();
+                        hourly.setCityId(location);
+                        hourly.setCityName(cityName);
+                        hourly.setHourlyFxTime(bean.getFxTime());
+                        hourly.setHourlyTemp(bean.getTemp());
+                        hourly.setHourlyText(bean.getText());
+                        hourly.setHourlyPop(bean.getPop());
+                        hourly.setHourlyPrecip(bean.getPrecip());
+                        hourly.setHourlyIcon(bean.getIcon());
+                        hourly.setHourlyPressure(bean.getPressure());
+                        hourly.save();
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showWeatherHourlyInfo(weatherHourlyBean);
+                            List<WeatherHourly> hourlyList = LitePal.where("cityId = ?", location).find(WeatherHourly.class);
+                            showWeatherHourlyInfo(hourlyList);
                         }
                     });
                 }
@@ -275,37 +333,22 @@ public class WeatherActivity extends AppCompatActivity {
      * 显示每天天气信息
      */
     @SuppressLint("SetTextI18n")
-    public void showWeatherDailyInfo(WeatherDailyBean weatherDailyBean) {
-        //每天天气类
-        List<WeatherDailyBean.DailyBean> dailyBeanList = weatherDailyBean.getDaily();
-        Basic basic = weatherDailyBean.getBasic();
+    public void showWeatherDailyInfo(List<WeatherDaily> dailyList) {
         //设置当天最高温和最低温
-        tempBorder.setText(dailyBeanList.get(0).getTempMin() + " ~ " + dailyBeanList.get(0).getTempMax() + "℃");
+        tempBorder.setText(dailyList.get(0).getDailyMin() + " ~ " + dailyList.get(0).getDailyMax() + "℃");
         //读取7天预报依次设置
         dailyLinearLayout.removeAllViews();
-        for (WeatherDailyBean.DailyBean bean : dailyBeanList) {
+        for (WeatherDaily daily : dailyList) {
             View view = LayoutInflater.from(this).inflate(R.layout.weather_dayforecast_item, dailyLinearLayout, false);
             TextView dailyDate = view.findViewById(R.id.weather_dayforecast_item_date);
             ImageView dailyImg = view.findViewById(R.id.weather_dayforecast_item_img);
             TextView dailyMax = view.findViewById(R.id.weather_dayforecast_item_max);
             TextView dailyMin = view.findViewById(R.id.weather_dayforecast_item_min);
-            dailyDate.setText(bean.getFxDate().substring(5));
-            dailyMax.setText(bean.getTempMax());
-            dailyMin.setText(bean.getTempMin());
-//            int currentHour = CurrentDateUtils.getCurrentHour();
-//            int id;
-//            if (currentHour >= 5 && currentHour < 19) {
-//                //此时是白天，读取白天的天气状态
-//                id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + bean.getIconDay());
-//            } else {
-//                //此时是夜晚，读取夜晚的天气状态
-//                id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + bean.getIconNight());
-//            }
-            int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + bean.getIconDay());
+            dailyDate.setText(daily.getDailyFxDate().substring(5));
+            dailyMax.setText(daily.getDailyMax());
+            dailyMin.setText(daily.getDailyMin());
+            int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + daily.getDailyIconDay());
             dailyImg.setImageResource(id);
-            Log.d("hour", bean.getIconDay());
-            Log.d("hour", bean.getIconNight());
-
             dailyLinearLayout.addView(view);
         }
 
@@ -314,8 +357,8 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 查询未来7天天气
      */
-    public void queryWeather7D(String location) {
-        QWeather.getWeather7D(WeatherActivity.this, location, new QWeather.OnResultWeatherDailyListener() {
+    public void queryWeather7D(Context context, String location, String cityName) {
+        QWeather.getWeather7D(context, location, new QWeather.OnResultWeatherDailyListener() {
             public static final String TAG = "weather_daily";
 
             @Override
@@ -329,10 +372,33 @@ public class WeatherActivity extends AppCompatActivity {
                 Log.i(TAG, "getWeatherHourly onSuccess: " + new Gson().toJson(weatherDailyBean));
                 //System.out.println("获取每天天气成功"+new Gson().toJson(weatherNowBean));
                 if (Code.OK == weatherDailyBean.getCode()) {
+                    List<WeatherDailyBean.DailyBean> dailyBeanList = weatherDailyBean.getDaily();
+                    List<WeatherDaily> dailyList = LitePal.findAll(WeatherDaily.class);
+                    if (dailyList.size() != 0) {
+                        LitePal.deleteAll(WeatherDaily.class);
+                    }
+                    for (WeatherDailyBean.DailyBean bean : dailyBeanList) {
+                        WeatherDaily daily = new WeatherDaily();
+                        daily.setCityId(location);
+                        daily.setCityName(cityName);
+                        daily.setDailyFxDate(bean.getFxDate());
+                        daily.setDailySunRise(bean.getSunrise());
+                        daily.setDailySunSet(bean.getSunset());
+                        daily.setDailyMoonRise(bean.getMoonRise());
+                        daily.setDailyMoonSet(bean.getMoonSet());
+                        daily.setDailyMoonPhase(bean.getMoonPhase());
+                        daily.setDailyMax(bean.getTempMax());
+                        daily.setDailyMin(bean.getTempMin());
+                        daily.setDailyIconDay(bean.getIconDay());
+                        daily.setDailyTextDay(bean.getTextDay());
+                        daily.setDailyTextNight(bean.getTextNight());
+                        daily.save();
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showWeatherDailyInfo(weatherDailyBean);
+                            List<WeatherDaily> dailyList = LitePal.where("cityId = ?", location).find(WeatherDaily.class);
+                            showWeatherDailyInfo(dailyList);
                         }
                     });
                 }

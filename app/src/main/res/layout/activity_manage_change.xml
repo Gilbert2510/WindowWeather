@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_manage_area_linearlayout"
+    android:id="@+id/activity_manage_change_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/manage_area_toolbar"
+        android:id="@+id/manage_change_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="10dp">
@@ -17,42 +17,41 @@
 
 
             <Button
-                android:id="@+id/manage_area_back"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:id="@+id/manage_change_selectall"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="5dp"
-                android:background="@drawable/back_vector_dark" />
+                android:text="全选"
+                android:textColor="@color/Blue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/manage_area_toolbar_textview"
+                android:id="@+id/manage_change_change_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="18dp"
-                android:text="@string/manage_area"
+                android:text="选择项目"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/manage_area_insert"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="30dp"
-                android:layout_toStartOf="@id/manage_area_edit"
-                android:background="@drawable/city_add_vector_dark" />
-
-            <Button
-                android:id="@+id/manage_area_edit"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:id="@+id/manage_change_cancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="25dp"
-                android:background="@drawable/city_edit_vector_dark" />
+                android:text="取消"
+                android:textColor="@color/Blue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
@@ -61,7 +60,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/manage_area_recyclerview"
+        android:id="@+id/manage_change_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="25dp"
@@ -70,4 +69,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <RelativeLayout
+        android:id="@+id/manage_change_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/manage_delete_dark" />
+    </RelativeLayout>
 </LinearLayout>

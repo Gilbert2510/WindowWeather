@@ -15,6 +15,11 @@ public class WeatherDaily extends LitePalSupport {
      * 月出时间
      * 月落时间
      * 月相名称
+     * 最高温
+     * 最低温
+     * 日天气状态id
+     * 白天天气状态
+     * 夜晚天气状态
      */
     private String cityId;
     private String cityName;
@@ -24,6 +29,11 @@ public class WeatherDaily extends LitePalSupport {
     private String dailyMoonRise;
     private String dailyMoonSet;
     private String dailyMoonPhase;
+    private String dailyMax;
+    private String dailyMin;
+    private String dailyIconDay;
+    private String dailyTextDay;
+    private String dailyTextNight;
 
     public int getId() {
         return id;
@@ -95,5 +105,45 @@ public class WeatherDaily extends LitePalSupport {
 
     public void setDailyMoonPhase(String dailyMoonPhase) {
         this.dailyMoonPhase = dailyMoonPhase;
+    }
+
+    public String getDailyMax() {
+        return dailyMax;
+    }
+
+    public void setDailyMax(String dailyMax) {
+        this.dailyMax = dailyMax;
+    }
+
+    public String getDailyMin() {
+        return dailyMin;
+    }
+
+    public void setDailyMin(String dailyMin) {
+        this.dailyMin = dailyMin;
+    }
+
+    public String getDailyIconDay() {
+        return dailyIconDay;
+    }
+
+    public void setDailyIconDay(String dailyIconDay) {
+        this.dailyIconDay = dailyIconDay;
+    }
+
+    public String getDailyTextDay() {
+        return dailyTextDay;
+    }
+
+    public void setDailyTextDay(String dailyTextDay) {
+        this.dailyTextDay = dailyTextDay;
+    }
+
+    public String getDailyTextNight() {
+        return dailyTextNight;
+    }
+
+    public void setDailyTextNight(String dailyTextNight) {
+        this.dailyTextNight = dailyTextNight;
     }
 }
