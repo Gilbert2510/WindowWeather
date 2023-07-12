@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +38,6 @@ import com.windowweather.android.db.City;
 import com.windowweather.android.db.WeatherDaily;
 import com.windowweather.android.db.WeatherHourly;
 import com.windowweather.android.util.BarUtils;
-import com.windowweather.android.util.CurrentDateUtils;
 import com.windowweather.android.util.ResourceUtils;
 
 import org.litepal.LitePal;
@@ -62,6 +63,7 @@ public class WeatherActivity extends AppCompatActivity {
     private LinearLayout weatherLinearLayout;
     private String cityId;
     private String cityName;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class WeatherActivity extends AppCompatActivity {
         dailyLinearLayout = findViewById(R.id.dayforecast_linearlayout);
         hourlyLinearLayout = findViewById(R.id.hourforecast_linearlayout);
         weatherLinearLayout = findViewById(R.id.activity_weather_linearlayout);
+        scrollView=findViewById(R.id.activity_weather_scrollview);
 
         //设置ToolBar
         setSupportActionBar(weatherToolbar);
@@ -243,12 +246,14 @@ public class WeatherActivity extends AppCompatActivity {
                             nowTempText.setText(city.getNowText());
                             weatherToolbarTitle.setText(cityName);
                             int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
-                            if (currentHour >= 5 && currentHour < 18) {
+                            if (currentHour >= 5 && currentHour < 19) {
                                 //此时是白天，设置白天天气壁纸
-                                weatherLinearLayout.setBackgroundResource(R.drawable.main_100);
+                                weatherLinearLayout.setBackgroundResource(R.drawable.main_day);
+                                //ChangeColorUtils.ChangeColorDay(scrollView,weatherLinearLayout);
                             } else {
                                 //此时是夜晚，设置夜晚天气壁纸
-                                weatherLinearLayout.setBackgroundResource(R.color.JackieBlue);
+                                weatherLinearLayout.setBackgroundResource(R.drawable.main_night);
+                                //ChangeColorUtils.ChangeColorNight(scrollView,weatherLinearLayout);
                             }
                         }
                     });
@@ -274,6 +279,17 @@ public class WeatherActivity extends AppCompatActivity {
             hourlyImg.setImageResource(id);
             hourlyDate.setText(hourly.getHourlyFxTime().substring(11, 16));
             hourlyTemp.setText(hourly.getHourlyTemp() + "℃");
+            City city=(LitePal.where("cityId = ?",hourly.getCityId()).find(City.class)).get(0);
+            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+            if (currentHour >= 5 && currentHour < 19) {
+                //此时是白天
+                hourlyDate.setTextColor(Color.BLACK);
+                hourlyTemp.setTextColor(Color.BLACK);
+            } else {
+                //此时是夜晚
+                hourlyDate.setTextColor(Color.WHITE);
+                hourlyTemp.setTextColor(Color.WHITE);
+            }
             hourlyLinearLayout.addView(view);
 
         }
@@ -349,6 +365,19 @@ public class WeatherActivity extends AppCompatActivity {
             dailyMin.setText(daily.getDailyMin());
             int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + daily.getDailyIconDay());
             dailyImg.setImageResource(id);
+            City city=(LitePal.where("cityId = ?",daily.getCityId()).find(City.class)).get(0);
+            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+            if (currentHour >= 5 && currentHour < 19) {
+                //此时是白天
+                dailyDate.setTextColor(Color.BLACK);
+                dailyMax.setTextColor(Color.BLACK);
+                dailyMin.setTextColor(Color.BLACK);
+            } else {
+                //此时是夜晚
+                dailyDate.setTextColor(Color.WHITE);
+                dailyMax.setTextColor(Color.WHITE);
+                dailyMin.setTextColor(Color.WHITE);
+            }
             dailyLinearLayout.addView(view);
         }
 

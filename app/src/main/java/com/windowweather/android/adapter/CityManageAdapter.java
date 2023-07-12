@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         private final TextView manageItemTemp;
         private final CardView manageItemCardView;
         private final CheckBox manageCheckBox;
+        private final RelativeLayout manageItemCard;
 
         public ViewHolder(View view) {
             super(view);
@@ -52,6 +54,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
             manageItemTemp = view.findViewById(R.id.manage_area_item_temp);
             manageItemCardView = view.findViewById(R.id.manage_area_item_cardview);
             manageCheckBox=view.findViewById(R.id.manage_area_item_checkbox);
+            manageItemCard=view.findViewById(R.id.manage_area_item_card);
             manageItemCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -85,6 +88,9 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         public CheckBox getManageCheckBox() {
             return manageCheckBox;
         }
+        public RelativeLayout getManageItemCard() {
+            return manageItemCard;
+        }
 
     }
 
@@ -109,6 +115,14 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         if(mflag) {
             //此时让CheckBox显示
             holder.manageCheckBox.setVisibility(View.VISIBLE);
+        }
+        int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+        if (currentHour >= 5 && currentHour < 19) {
+            //白天
+            holder.manageItemCard.setBackgroundResource(R.drawable.main_day);
+        } else {
+            //夜晚
+            holder.manageItemCard.setBackgroundResource(R.drawable.main_night);
         }
     }
 
