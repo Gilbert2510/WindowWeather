@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp">
+    android:layout_margin="20dp">
 
     <ImageView
         android:id="@+id/weather_hourforecast_item_img"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_hourforecast_item_img"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="15sp" />
     <TextView
         android:id="@+id/weather_hourforecast_item_temp"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_hourforecast_item_date"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="13sp" />
 
 </RelativeLayout>
