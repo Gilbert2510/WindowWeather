@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_weather_framelayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/TestColor">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/activity_weather_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/main_100">
+        android:background="@drawable/main_100"
+        android:orientation="vertical">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -19,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            app:popupTheme="@style/WeatherToolbarPopupTheme"
-            android:background="@color/Transparent">
+            android:background="@color/Transparent"
+            app:popupTheme="@style/WeatherToolbarPopupTheme">
 
             <TextView
                 android:id="@+id/weather_toolbar_title"
@@ -58,12 +57,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <com.airbnb.lottie.LottieAnimationView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:visibility="invisible"
                         app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        android:visibility="invisible" />
+                        app:lottie_loop="true" />
 
                     <include
                         layout="@layout/weather_main"
@@ -88,6 +88,15 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp" />
+
+                    <include
+                        layout="@layout/weather_sun"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp" />
+
                 </LinearLayout>
             </ScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

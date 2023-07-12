@@ -34,6 +34,7 @@ public class WeatherDaily extends LitePalSupport {
     private String dailyIconDay;
     private String dailyTextDay;
     private String dailyTextNight;
+    private String dailyUvIndex;
 
     public int getId() {
         return id;
@@ -145,5 +146,13 @@ public class WeatherDaily extends LitePalSupport {
 
     public void setDailyTextNight(String dailyTextNight) {
         this.dailyTextNight = dailyTextNight;
+    }
+
+    public String getDailyUvIndex() {
+        return dailyUvIndex;
+    }
+
+    public void setDailyUvIndex(String dailyUvIndex) {
+        this.dailyUvIndex = dailyUvIndex;
     }
 }

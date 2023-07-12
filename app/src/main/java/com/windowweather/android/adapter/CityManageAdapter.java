@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.windowweather.android.R;
 import com.windowweather.android.db.City;
-import com.windowweather.android.util.CurrentDateUtils;
 
 import java.util.List;
 

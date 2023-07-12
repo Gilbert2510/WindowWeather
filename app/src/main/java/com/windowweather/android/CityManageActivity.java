@@ -32,7 +32,7 @@ import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
 import com.windowweather.android.adapter.CityManageAdapter;
 import com.windowweather.android.db.City;
-import com.windowweather.android.util.CurrentDateUtils;
+import com.windowweather.android.util.DateUtils;
 
 import org.litepal.LitePal;
 
@@ -96,6 +96,12 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
                             city.setNowTemp(bean.getTemp());
                             city.setNowText(bean.getText());
                             city.setNowIcon(bean.getIcon());
+                            city.setNowCloud(bean.getCloud());
+                            city.setNowHumidity(bean.getHumidity());
+                            city.setNowPressure(bean.getPressure());
+                            city.setNowVis(bean.getVis());
+                            city.setNowWindDir(bean.getWindDir());
+                            city.setNowWindScale(bean.getWindScale());
                             city.save();
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -190,7 +196,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        int currentHour = CurrentDateUtils.getCurrentHour();
+        int currentHour = DateUtils.getCurrentHour();
         if (currentHour < 7 || currentHour >= 21) {
             //当处于夜晚时切换夜间模式
             manageLinearLayout.setBackgroundResource(R.color.black);

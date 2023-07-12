@@ -37,6 +37,7 @@ import com.qweather.sdk.view.QWeather;
 import com.windowweather.android.db.City;
 import com.windowweather.android.db.WeatherDaily;
 import com.windowweather.android.db.WeatherHourly;
+import com.windowweather.android.fragment.WeatherSunView;
 import com.windowweather.android.util.BarUtils;
 import com.windowweather.android.util.ResourceUtils;
 
@@ -63,7 +64,14 @@ public class WeatherActivity extends AppCompatActivity {
     private LinearLayout weatherLinearLayout;
     private String cityId;
     private String cityName;
-    private ScrollView scrollView;
+    private TextView feels;
+    private TextView wind;
+    private TextView windText;
+    private TextView humidity;
+    private TextView vis;
+    private TextView uv;
+    private TextView pressure;
+    private WeatherSunView sunView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,15 @@ public class WeatherActivity extends AppCompatActivity {
         dailyLinearLayout = findViewById(R.id.dayforecast_linearlayout);
         hourlyLinearLayout = findViewById(R.id.hourforecast_linearlayout);
         weatherLinearLayout = findViewById(R.id.activity_weather_linearlayout);
-        scrollView=findViewById(R.id.activity_weather_scrollview);
+
+        feels=findViewById(R.id.weather_other_feels);
+        wind=findViewById(R.id.weather_other_wind);
+        windText=findViewById(R.id.weather_other_windText);
+        humidity=findViewById(R.id.weather_other_humidity);
+        vis=findViewById(R.id.weather_other_vis);
+        uv=findViewById(R.id.weather_other_uv);
+        pressure=findViewById(R.id.weather_other_pressure);
+        sunView=findViewById(R.id.weather_sun_view);
 
         //设置ToolBar
         setSupportActionBar(weatherToolbar);
@@ -97,6 +113,8 @@ public class WeatherActivity extends AppCompatActivity {
                 try {
                     showNowInfo(cityId, cityName);
                     queryWeather24H(WeatherActivity.this, cityId, cityName);
+                    List<WeatherDaily> dailyList = LitePal.where("cityId = ?", cityId).find(WeatherDaily.class);
+                    showOtherInfo(cityId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -133,7 +151,7 @@ public class WeatherActivity extends AppCompatActivity {
                         queryWeather7D(WeatherActivity.this, cityId, cityName);
                     }
                     queryWeather24H(WeatherActivity.this, cityId, cityName);
-
+                    showOtherInfo(cityId);
                 }
             }
         });
@@ -172,6 +190,8 @@ public class WeatherActivity extends AppCompatActivity {
             showNowInfo(cityId, cityName);
             queryWeather24H(WeatherActivity.this, cityId, cityName);
             queryWeather7D(WeatherActivity.this, cityId, cityName);
+            List<WeatherDaily> dailyList = LitePal.where("cityId = ?", cityId).find(WeatherDaily.class);
+            showOtherInfo(cityId);
         }
 
 
@@ -281,15 +301,15 @@ public class WeatherActivity extends AppCompatActivity {
             hourlyTemp.setText(hourly.getHourlyTemp() + "℃");
             City city=(LitePal.where("cityId = ?",hourly.getCityId()).find(City.class)).get(0);
             int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
-            if (currentHour >= 5 && currentHour < 19) {
-                //此时是白天
-                hourlyDate.setTextColor(Color.BLACK);
-                hourlyTemp.setTextColor(Color.BLACK);
-            } else {
+//            if (currentHour >= 5 && currentHour < 19) {
+//                //此时是白天
+//                hourlyDate.setTextColor(Color.BLACK);
+//                hourlyTemp.setTextColor(Color.BLACK);
+//            } else {
                 //此时是夜晚
                 hourlyDate.setTextColor(Color.WHITE);
                 hourlyTemp.setTextColor(Color.WHITE);
-            }
+//            }
             hourlyLinearLayout.addView(view);
 
         }
@@ -350,10 +370,31 @@ public class WeatherActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     public void showWeatherDailyInfo(List<WeatherDaily> dailyList) {
+        WeatherDaily day=dailyList.get(0);
         //设置当天最高温和最低温
-        tempBorder.setText(dailyList.get(0).getDailyMin() + " ~ " + dailyList.get(0).getDailyMax() + "℃");
+        tempBorder.setText(day.getDailyMin() + " ~ " + day.getDailyMax() + "℃");
         //读取7天预报依次设置
         dailyLinearLayout.removeAllViews();
+        //设置其他数据
+        String uvIndex=day.getDailyUvIndex();
+        String strUv;
+        if(uvIndex.equals("1")) {
+            strUv="最弱";
+        } else if(uvIndex.equals("2")) {
+            strUv="弱";
+        } else if(uvIndex.equals("3")) {
+            strUv="中等";
+        } else if(uvIndex.equals("4")) {
+            strUv="强";
+        } else {
+            strUv="很强";
+        }
+        uv.setText(strUv);
+        //设置日出日落
+        String sunRise=day.getDailySunRise();
+        String sunSet=day.getDailySunSet();
+        sunView.setSunriseTime(sunRise);
+        sunView.setSunsetTime(sunSet);
         for (WeatherDaily daily : dailyList) {
             View view = LayoutInflater.from(this).inflate(R.layout.weather_dayforecast_item, dailyLinearLayout, false);
             TextView dailyDate = view.findViewById(R.id.weather_dayforecast_item_date);
@@ -365,19 +406,19 @@ public class WeatherActivity extends AppCompatActivity {
             dailyMin.setText(daily.getDailyMin());
             int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + daily.getDailyIconDay());
             dailyImg.setImageResource(id);
-            City city=(LitePal.where("cityId = ?",daily.getCityId()).find(City.class)).get(0);
-            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
-            if (currentHour >= 5 && currentHour < 19) {
-                //此时是白天
-                dailyDate.setTextColor(Color.BLACK);
-                dailyMax.setTextColor(Color.BLACK);
-                dailyMin.setTextColor(Color.BLACK);
-            } else {
+//            City city=(LitePal.where("cityId = ?",daily.getCityId()).find(City.class)).get(0);
+//            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+//            if (currentHour >= 5 && currentHour < 19) {
+//                //此时是白天
+//                dailyDate.setTextColor(Color.BLACK);
+//                dailyMax.setTextColor(Color.BLACK);
+//                dailyMin.setTextColor(Color.BLACK);
+//            } else {
                 //此时是夜晚
                 dailyDate.setTextColor(Color.WHITE);
                 dailyMax.setTextColor(Color.WHITE);
                 dailyMin.setTextColor(Color.WHITE);
-            }
+//            }
             dailyLinearLayout.addView(view);
         }
 
@@ -421,6 +462,7 @@ public class WeatherActivity extends AppCompatActivity {
                         daily.setDailyIconDay(bean.getIconDay());
                         daily.setDailyTextDay(bean.getTextDay());
                         daily.setDailyTextNight(bean.getTextNight());
+                        daily.setDailyUvIndex(bean.getUvIndex());
                         daily.save();
                     }
                     runOnUiThread(new Runnable() {
@@ -433,5 +475,16 @@ public class WeatherActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showOtherInfo(String cityId) {
+        City city=(LitePal.where("cityId = ?",cityId).find(City.class)).get(0);
+        feels.setText(city.getFeelsLike()+"℃");
+        wind.setText(city.getNowWindScale()+"级");
+        windText.setText(city.getNowWindDir());
+        humidity.setText(city.getNowHumidity()+"%");
+        vis.setText(city.getNowVis()+"Km");
+
+        pressure.setText(city.getNowPressure()+" hPa");
     }
 }
