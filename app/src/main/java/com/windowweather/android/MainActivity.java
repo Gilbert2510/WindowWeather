@@ -23,16 +23,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         //全局配置SDK账号
         HeConfig.init("HE2306072240111125", "e5234bab755f4ad884fb4bc6582813da");
         //切换至免费订阅
         HeConfig.switchToDevService();
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         progressBar = findViewById(R.id.activity_main_progress);
         textView = findViewById(R.id.activity_main_textview);
-        isFirst();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                isFirst();
+            }
+        });
+
     }
 
     /**

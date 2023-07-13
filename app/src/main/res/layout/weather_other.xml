@@ -6,8 +6,9 @@
     <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,11 +19,11 @@
                 android:id="@+id/weather_other_feelsImg"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/weather_other_feels"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true" />
+                android:src="@drawable/other_feels" />
 
             <TextView
                 android:id="@+id/weather_other_feelsText"
@@ -30,11 +31,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_feelsImg"
                 android:layout_alignParentStart="true"
-                android:text="体感"
                 android:layout_marginStart="54dp"
+                android:text="体感"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_feels"
                 android:layout_width="wrap_content"
@@ -49,11 +51,12 @@
                 android:id="@+id/weather_other_windImg"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/weather_other_wind"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true" />
+                android:src="@drawable/other_wind" />
+
             <TextView
                 android:id="@+id/weather_other_windText"
                 android:layout_width="wrap_content"
@@ -62,8 +65,9 @@
                 android:layout_centerHorizontal="true"
                 android:text="--风"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_wind"
                 android:layout_width="wrap_content"
@@ -78,29 +82,31 @@
                 android:id="@+id/weather_other_humidityImg"
                 android:layout_width="20dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="55dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/weather_other_humidity"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true" />
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="55dp"
+                android:src="@drawable/other_humidity" />
+
             <TextView
                 android:id="@+id/weather_other_humidityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_windImg"
-                android:layout_marginEnd="52dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="52dp"
                 android:text="湿度"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_humidity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_humidityText"
-                android:layout_marginEnd="53dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="53dp"
                 android:text="--%"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
@@ -109,11 +115,11 @@
                 android:id="@+id/weather_other_visImg"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
+                android:layout_below="@id/weather_other_feels"
+                android:layout_alignParentStart="true"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/weather_other_vis"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/weather_other_feels"/>
+                android:src="@drawable/other_vis" />
 
             <TextView
                 android:id="@+id/weather_other_visText"
@@ -121,11 +127,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_visImg"
                 android:layout_alignParentStart="true"
-                android:text="能见度"
                 android:layout_marginStart="47dp"
+                android:text="能见度"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_vis"
                 android:layout_width="wrap_content"
@@ -140,10 +147,11 @@
                 android:id="@+id/weather_other_uvImg"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/weather_other_uv"
+                android:layout_below="@id/weather_other_wind"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/weather_other_wind" />
+                android:layout_marginTop="30dp"
+                android:src="@drawable/other_uv" />
+
             <TextView
                 android:id="@+id/weather_other_uvText"
                 android:layout_width="wrap_content"
@@ -152,46 +160,49 @@
                 android:layout_centerHorizontal="true"
                 android:text="紫外线"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_uv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_uvText"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
                 android:text="--"
                 android:textColor="@color/black"
-                android:layout_marginBottom="20dp"
                 android:textSize="13sp" />
 
             <ImageView
                 android:id="@+id/weather_other_pressureImg"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginTop="32dp"
-                android:src="@drawable/weather_other_pressure"
+                android:layout_below="@id/weather_other_humidity"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/weather_other_humidity"/>
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="50dp"
+                android:src="@drawable/other_pressure" />
+
             <TextView
                 android:id="@+id/weather_other_pressureText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_pressureImg"
-                android:layout_marginEnd="40dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="40dp"
                 android:text="大气压强"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/weather_other_pressure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weather_other_pressureText"
-                android:layout_marginEnd="41dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="41dp"
                 android:text="---hPa"
                 android:textColor="@color/black"
                 android:textSize="13sp" />

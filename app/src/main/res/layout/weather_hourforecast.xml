@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
@@ -8,14 +9,33 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        tools:ignore="UselessParent">
 
         <LinearLayout
-            android:id="@+id/hourforecast_linearlayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/weather_hour_linechart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/hourforecast_linearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+            </LinearLayout>
         </LinearLayout>
+
+
     </HorizontalScrollView>
 </FrameLayout>

@@ -2,17 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp">
+    android:layout_marginBottom="20dp"
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp">
 
     <ImageView
         android:id="@+id/weather_hourforecast_item_img"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginBottom="3dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="7dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginBottom="3dp" />
+
     <TextView
         android:id="@+id/weather_hourforecast_item_date"
         android:layout_width="wrap_content"
@@ -21,6 +25,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="15sp" />
+
     <TextView
         android:id="@+id/weather_hourforecast_item_temp"
         android:layout_width="wrap_content"
@@ -28,6 +33,7 @@
         android:layout_below="@id/weather_hourforecast_item_date"
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="WhiteSmoke">#FFF5F5F5</color>
+    <color name="WhiteSmoke">#FFF3F3F3</color>
+    <color name="WhiteTransparent">#80FFFFFF</color>
     <color name="TestColor">#FF3399ff</color>
     <color name="Grey">#60FFFFFF</color>
     <color name="HalfGrey">#85FFFFFF</color>
@@ -12,6 +13,8 @@
     <color name="switch_btn_colors">#87AADC</color>
     <color name="BackGrey">#F4F4F4</color>
     <color name="LightRed">#FF6347</color>
-    <color name="Transparent">#00000000</color>
     <color name="SmokeBlue">#403399ff</color>
+    <color name="Sunny_top">#296CC3</color>
+    <color name="Sunny_mid">#528BD8</color>
+    <color name="Sunny_bottom">#7FB1EC</color>
 </resources>
