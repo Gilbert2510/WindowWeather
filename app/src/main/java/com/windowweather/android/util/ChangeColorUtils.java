@@ -23,15 +23,15 @@ public class ChangeColorUtils {
 
                 int maxScroll = scrollView.getChildAt(0).getHeight() - scrollView.getHeight();
                 float scrollRatio = (float) scrollY / maxScroll;
-                int Red = (int) (scrollRatio * 11);
-                int Green = (int) (scrollRatio * 23);
-                int Blue = (int) (scrollRatio * 70);
+                int Red = (int) (scrollRatio * 5);
+                int Green = (int) (scrollRatio * 24);
+                int Blue = (int) (scrollRatio * 67);
                 linearLayout.setBackgroundColor(Color.rgb(Red, Green, Blue));
             }
         });
     }
 
-    public static void ChangeColorDay(ScrollView scrollView, LinearLayout linearLayout) {
+    public static void ChangeColor(ScrollView scrollView, LinearLayout linearLayout) {
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {

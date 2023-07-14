@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp">
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/weather_dayforecast_item_date"
@@ -10,32 +10,51 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="15sp"
+        android:text="--/--"
         android:textColor="@color/black"
-        android:text="06/23" />
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/weather_dayforecast_item_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weather_dayforecast_item_date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:text="--"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+
     <ImageView
         android:id="@+id/weather_dayforecast_item_img"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_margin="7dp"
-        android:layout_below="@id/weather_dayforecast_item_date"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/weather_dayforecast_item_week"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="7dp" />
+
     <TextView
         android:id="@+id/weather_dayforecast_item_max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_dayforecast_item_img"
         android:layout_centerHorizontal="true"
-        android:textSize="15sp"
+        android:text="5"
         android:textColor="@color/black"
-        android:text="5" />
+        android:textSize="15sp"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/weather_dayforecast_item_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_dayforecast_item_max"
         android:layout_centerHorizontal="true"
-        android:textSize="15sp"
+        android:text="10"
         android:textColor="@color/black"
-        android:text="10" />
+        android:textSize="15sp"
+        android:visibility="gone" />
 </RelativeLayout>

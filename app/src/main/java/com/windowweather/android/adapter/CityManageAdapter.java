@@ -118,10 +118,10 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
         if (currentHour >= 5 && currentHour < 19) {
             //白天
-            holder.manageItemCard.setBackgroundResource(R.drawable.main_day);
+            holder.manageItemCard.setBackgroundResource(R.drawable.weather_sunny);
         } else {
             //夜晚
-            holder.manageItemCard.setBackgroundResource(R.drawable.main_night);
+            holder.manageItemCard.setBackgroundResource(R.drawable.weather_night);
         }
     }
 

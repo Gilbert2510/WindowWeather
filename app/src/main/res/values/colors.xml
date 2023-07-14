@@ -17,4 +17,7 @@
     <color name="Sunny_top">#296CC3</color>
     <color name="Sunny_mid">#528BD8</color>
     <color name="Sunny_bottom">#7FB1EC</color>
+    <color name="Night_top">#494F6F</color>
+    <color name="Night_mid">#051843</color>
+    <color name="Night_bottom">#2D3656</color>
 </resources>

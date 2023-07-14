@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +44,12 @@ import com.windowweather.android.db.WeatherHourly;
 import com.windowweather.android.fragment.WeatherSunView;
 import com.windowweather.android.fragment.WeatherTempLineChart;
 import com.windowweather.android.util.BarUtils;
+import com.windowweather.android.util.ChangeColorUtils;
 import com.windowweather.android.util.ResourceUtils;
 
 import org.litepal.LitePal;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -75,7 +80,9 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView uv;
     private TextView pressure;
     private WeatherSunView sunView;
-    private LineChart lineChart;
+    private LineChart hourLineChart;
+    private LineChart dayLineChart;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,7 @@ public class WeatherActivity extends AppCompatActivity {
         BarUtils.translucentStatusBar(WeatherActivity.this, true);
         //获取界面组件
         SwipeRefreshLayout refreshLayout = findViewById(R.id.activity_weather_refresh);
+        scrollView = findViewById(R.id.activity_weather_scrollview);
 
         weatherToolbar = findViewById(R.id.weather_toolbar);
         weatherToolbarTitle = findViewById(R.id.weather_toolbar_title);
@@ -98,7 +106,8 @@ public class WeatherActivity extends AppCompatActivity {
         hourlyLinearLayout = findViewById(R.id.hourforecast_linearlayout);
         weatherLinearLayout = findViewById(R.id.activity_weather_linearlayout);
 
-        lineChart = findViewById(R.id.weather_hour_linechart);
+        hourLineChart = findViewById(R.id.weather_hour_linechart);
+        dayLineChart = findViewById(R.id.weather_day_linechart);
 
         feels = findViewById(R.id.weather_other_feels);
         wind = findViewById(R.id.weather_other_wind);
@@ -113,6 +122,7 @@ public class WeatherActivity extends AppCompatActivity {
         //设置ToolBar
         setSupportActionBar(weatherToolbar);
         weatherToolbar.setNavigationIcon(R.drawable.city_add_vector);
+
 
         /**
          * 刷新监听器
@@ -286,7 +296,7 @@ public class WeatherActivity extends AppCompatActivity {
                                 //ChangeColorUtils.ChangeColorDay(scrollView,weatherLinearLayout);
                             } else {
                                 //此时是夜晚，设置夜晚天气壁纸
-                                weatherLinearLayout.setBackgroundResource(R.drawable.main_night);
+                                weatherLinearLayout.setBackgroundResource(R.drawable.weather_night);
                                 //ChangeColorUtils.ChangeColorNight(scrollView,weatherLinearLayout);
                             }
                         }
@@ -339,7 +349,7 @@ public class WeatherActivity extends AppCompatActivity {
             hourlyLinearLayout.addView(view);
             ++i;
         }
-        WeatherTempLineChart.initHourlyLineChart(WeatherActivity.this, lineChart, hourLineChartData);
+        WeatherTempLineChart.initHourlyLineChart(hourLineChart, hourLineChartData);
 
     }
 
@@ -397,6 +407,9 @@ public class WeatherActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     public void showWeatherDailyInfo(List<WeatherDaily> dailyList) {
+        int i = 0;
+        int[] data1=new int[dailyList.size()];
+        int[] data2=new int[dailyList.size()];
         WeatherDaily day = dailyList.get(0);
         //设置当天最高温和最低温
         tempBorder.setText(day.getDailyMin() + " ~ " + day.getDailyMax() + "℃");
@@ -425,14 +438,54 @@ public class WeatherActivity extends AppCompatActivity {
         for (WeatherDaily daily : dailyList) {
             View view = LayoutInflater.from(this).inflate(R.layout.weather_dayforecast_item, dailyLinearLayout, false);
             TextView dailyDate = view.findViewById(R.id.weather_dayforecast_item_date);
+            TextView dailyWeek = view.findViewById(R.id.weather_dayforecast_item_week);
             ImageView dailyImg = view.findViewById(R.id.weather_dayforecast_item_img);
             TextView dailyMax = view.findViewById(R.id.weather_dayforecast_item_max);
             TextView dailyMin = view.findViewById(R.id.weather_dayforecast_item_min);
             dailyDate.setText(daily.getDailyFxDate().substring(5));
+            dailyWeek.setTextColor(Color.WHITE);
             dailyMax.setText(daily.getDailyMax());
             dailyMin.setText(daily.getDailyMin());
             int id = ResourceUtils.getDrawableId(WeatherActivity.this, "w" + daily.getDailyIconDay());
             dailyImg.setImageResource(id);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DAY_OF_WEEK, i);
+            Date tomorrow = c.getTime();
+            c.setTime(tomorrow);
+            String s = "";
+            switch (c.get(Calendar.DAY_OF_WEEK)) {
+                case 1:
+                    s = "周日";
+                    break;
+                case 2:
+                    s = "周一";
+                    break;
+                case 3:
+                    s = "周二";
+                    break;
+                case 4:
+                    s = "周三";
+                    break;
+                case 5:
+                    s = "周四";
+                    break;
+                case 6:
+                    s = "周五";
+                    break;
+                case 7:
+                    s = "周六";
+                    break;
+            }
+            if (i == 0) {
+                dailyWeek.setText("今日");
+//                dailyDate.setTypeface(Typeface.DEFAULT_BOLD);
+//                dailyDate.setTextSize(16f);
+            } else if (i == 1) {
+                dailyWeek.setText("明日");
+            } else {
+                dailyWeek.setText(s);
+            }
 //            City city=(LitePal.where("cityId = ?",daily.getCityId()).find(City.class)).get(0);
 //            int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
 //            if (currentHour >= 5 && currentHour < 19) {
@@ -446,8 +499,13 @@ public class WeatherActivity extends AppCompatActivity {
             dailyMax.setTextColor(Color.WHITE);
             dailyMin.setTextColor(Color.WHITE);
 //            }
+            data1[i]=Integer.parseInt(dailyMax.getText().toString());
+            data2[i]=Integer.parseInt(dailyMin.getText().toString());
+
             dailyLinearLayout.addView(view);
+            ++i;
         }
+        WeatherTempLineChart.initDailyLineChart(dayLineChart,data1,data2);
 
     }
 
