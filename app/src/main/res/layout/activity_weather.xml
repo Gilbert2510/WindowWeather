@@ -10,7 +10,6 @@
         android:id="@+id/activity_weather_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/main_day"
         android:orientation="vertical">
 
 
@@ -58,18 +57,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true" />
-
                     <include
                         layout="@layout/weather_main"
                         android:layout_width="match_parent"
-                        android:layout_height="330dp" />
-
+                        android:layout_height="350dp" />
 
                     <include
                         layout="@layout/weather_hourforecast"
@@ -105,6 +96,15 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp" />
+
+                    <include
+                        layout="@layout/weather_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp" />
+
 
                 </LinearLayout>
             </ScrollView>

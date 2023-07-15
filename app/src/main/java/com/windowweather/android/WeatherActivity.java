@@ -24,12 +24,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.Basic;
@@ -44,7 +47,6 @@ import com.windowweather.android.db.WeatherHourly;
 import com.windowweather.android.fragment.WeatherSunView;
 import com.windowweather.android.fragment.WeatherTempLineChart;
 import com.windowweather.android.util.BarUtils;
-import com.windowweather.android.util.ChangeColorUtils;
 import com.windowweather.android.util.ResourceUtils;
 
 import org.litepal.LitePal;
@@ -70,8 +72,11 @@ public class WeatherActivity extends AppCompatActivity {
     private LinearLayout dailyLinearLayout;
     private LinearLayout hourlyLinearLayout;
     private LinearLayout weatherLinearLayout;
+    private ImageView backgroundLeft;
+    private ImageView backgroundRight;
     private String cityId;
     private String cityName;
+    private String cityUrl;
     private TextView feels;
     private TextView wind;
     private TextView windText;
@@ -82,7 +87,7 @@ public class WeatherActivity extends AppCompatActivity {
     private WeatherSunView sunView;
     private LineChart hourLineChart;
     private LineChart dayLineChart;
-    private ScrollView scrollView;
+    private ImageView urlImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +97,20 @@ public class WeatherActivity extends AppCompatActivity {
         BarUtils.translucentStatusBar(WeatherActivity.this, true);
         //获取界面组件
         SwipeRefreshLayout refreshLayout = findViewById(R.id.activity_weather_refresh);
-        scrollView = findViewById(R.id.activity_weather_scrollview);
+        ScrollView scrollView = findViewById(R.id.activity_weather_scrollview);
 
         weatherToolbar = findViewById(R.id.weather_toolbar);
         weatherToolbarTitle = findViewById(R.id.weather_toolbar_title);
+
+        /**
+         * 加载动画
+         */
+        Animation animationStart= AnimationUtils.loadAnimation(WeatherActivity.this,R.anim.cloudy_start);
+        Animation animationEnd=AnimationUtils.loadAnimation(WeatherActivity.this,R.anim.cloudy_end);
+        backgroundLeft=findViewById(R.id.weather_backgroundLeftImg);
+        backgroundRight=findViewById(R.id.weather_backgroundRightImg);
+        backgroundLeft.startAnimation(animationStart);
+        backgroundRight.startAnimation(animationEnd);
 
         nowTemp = findViewById(R.id.weather_main_now_temp);
         nowTempText = findViewById(R.id.weather_main_now_tempText);
@@ -118,6 +133,9 @@ public class WeatherActivity extends AppCompatActivity {
         pressure = findViewById(R.id.weather_other_pressure);
 
         sunView = findViewById(R.id.weather_sun_view);
+
+        urlImg=findViewById(R.id.weather_url_img);
+
 
         //设置ToolBar
         setSupportActionBar(weatherToolbar);
@@ -144,6 +162,24 @@ public class WeatherActivity extends AppCompatActivity {
                         refreshLayout.setRefreshing(false);
                     }
                 }, 2000);
+            }
+        });
+
+        /**
+         * 和风天气网页预报
+         * 使用Glide加载gif文件
+         * 设置监听器
+         */
+        Glide.with(WeatherActivity.this)
+                .asGif()
+                .load(R.drawable.weather_url)
+                .into(urlImg);
+        urlImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(WeatherActivity.this, UrlWeatherActivity.class);
+                intent.putExtra("url",cityUrl);
+                startActivity(intent);
             }
         });
 
@@ -289,8 +325,9 @@ public class WeatherActivity extends AppCompatActivity {
                             nowTemp.setText(city.getNowTemp());
                             nowTempText.setText(city.getNowText());
                             weatherToolbarTitle.setText(cityName);
+                            cityUrl=city.getFxLink();
                             int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
-                            if (currentHour >= 5 && currentHour < 19) {
+                            if (currentHour >= 6 && currentHour < 19) {
                                 //此时是白天，设置白天天气壁纸
                                 weatherLinearLayout.setBackgroundResource(R.drawable.weather_sunny);
                                 //ChangeColorUtils.ChangeColorDay(scrollView,weatherLinearLayout);
@@ -418,16 +455,22 @@ public class WeatherActivity extends AppCompatActivity {
         //设置其他数据
         String uvIndex = day.getDailyUvIndex();
         String strUv;
-        if (uvIndex.equals("1")) {
-            strUv = "最弱";
-        } else if (uvIndex.equals("2")) {
-            strUv = "弱";
-        } else if (uvIndex.equals("3")) {
-            strUv = "中等";
-        } else if (uvIndex.equals("4")) {
-            strUv = "强";
-        } else {
-            strUv = "很强";
+        switch (uvIndex) {
+            case "1":
+                strUv = "最弱";
+                break;
+            case "2":
+                strUv = "弱";
+                break;
+            case "3":
+                strUv = "中等";
+                break;
+            case "4":
+                strUv = "强";
+                break;
+            default:
+                strUv = "很强";
+                break;
         }
         uv.setText(strUv);
         //设置日出日落

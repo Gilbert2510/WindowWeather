@@ -9,6 +9,14 @@
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--    访问sd卡需要添加的权限-->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -20,7 +28,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Background.Theme.WindowWeather"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".UrlWeatherActivity"
+            android:exported="false" />
         <activity
             android:name=".CityManageChangeActivity"
             android:exported="true"
