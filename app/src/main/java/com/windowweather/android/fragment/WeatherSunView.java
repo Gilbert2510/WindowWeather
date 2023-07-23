@@ -1,5 +1,6 @@
 package com.windowweather.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -66,6 +67,7 @@ public class WeatherSunView extends View {
         }
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -94,18 +96,18 @@ public class WeatherSunView extends View {
         arcPaint.setAntiAlias(true);
         arcPaint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0));
         // 绘制白色圆弧
-        arcPaint.setColor(Color.WHITE);
+        arcPaint.setColor(Color.parseColor("#A9A9A9"));
         canvas.drawPath(arcPath, arcPaint);
         // 绘制黄色圆弧
-        arcPaint.setColor(Color.YELLOW);
+        arcPaint.setColor(Color.parseColor("#FFD700"));
         arcPath.reset();
         arcPath.addArc(arcRect, START_ANGLE, SWEEP_ANGLE * getSunPositionProgress());
         canvas.drawPath(arcPath, arcPaint);
 
         // 绘制直线
         Paint linePaint = new Paint();
-        linePaint.setColor(Color.parseColor("#FFFFFFFF"));
-        linePaint.setStrokeWidth(7f);
+        linePaint.setColor(Color.parseColor("#A9A9A9"));
+        linePaint.setStrokeWidth(3f);
         float lineStartX = centerX - arcRadius * 1.2f;
         float lineStartY = centerY - arcRadius * 0.3f;
         float lineEndX = centerX + arcRadius * 1.2f;
@@ -115,7 +117,7 @@ public class WeatherSunView extends View {
         // 绘制太阳
         Paint sunPaint = new Paint();
         sunPaint.setAntiAlias(true);
-        Drawable sunDrawable = getResources().getDrawable(R.drawable.w100);
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable sunDrawable = getResources().getDrawable(R.drawable.w100);
         float[] pos = new float[2];
         pathMeasure.getPosTan(getSunPositionProgress() * pathMeasure.getLength(), pos, null);
         float sunLeft = pos[0] - (SUN_SIZE / 2f);
@@ -128,7 +130,7 @@ public class WeatherSunView extends View {
         // 绘制文本
         Paint textPaint = new Paint();
         textPaint.setStrokeWidth(7f);
-        textPaint.setColor(Color.parseColor("#FFFFFFFF"));
+        textPaint.setColor(Color.parseColor("#A9A9A9"));
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(arcRadius * 0.10f);
         String sunriseStr = "日出  " + sunriseTime;

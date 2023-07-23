@@ -6,10 +6,6 @@
         android:title="反馈天气"
         app:showAsAction="never" />
     <item
-        android:id="@+id/option_sharing"
-        android:title="分享天气"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/option_setting"
         android:title="设置" />
 </menu>

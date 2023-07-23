@@ -116,11 +116,18 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
             holder.manageCheckBox.setVisibility(View.VISIBLE);
         }
         int currentHour = Integer.parseInt(city.getObsTime().substring(11, 13));
+        String text=city.getNowText();
         if (currentHour >= 5 && currentHour < 19) {
-            //白天
-            holder.manageItemCard.setBackgroundResource(R.drawable.weather_sunny);
+            if (text.equals("晴")) {
+                holder.manageItemCard.setBackgroundResource(R.drawable.weather_sunny);
+            } else if (text.contains("云")) {
+                holder.manageItemCard.setBackgroundResource(R.drawable.weather_sunny);
+            } else if (text.equals("阴")) {
+                holder.manageItemCard.setBackgroundResource(R.drawable.manage_fill_cloudy);
+            } else if (text.contains("雨")) {
+                holder.manageItemCard.setBackgroundResource(R.drawable.manage_day_rain);
+            }
         } else {
-            //夜晚
             holder.manageItemCard.setBackgroundResource(R.drawable.weather_night);
         }
     }

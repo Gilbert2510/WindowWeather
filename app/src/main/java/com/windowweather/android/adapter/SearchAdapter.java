@@ -70,6 +70,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.areaName.setText(backSearchList.get(position).getAreaName());
+        holder.areaName.setTextSize(15f);
         holder.cityId.setText(backSearchList.get(position).getCityId());
         holder.cityName.setText(backSearchList.get(position).getCityName());
         return convertView;

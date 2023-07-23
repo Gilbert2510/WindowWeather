@@ -4,7 +4,23 @@
     android:id="@+id/activity_weather_framelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Night_bottom">
+    android:background="@drawable/weather_sunny">
+
+    <ImageView
+        android:id="@+id/weather_backgroundLeftImg"
+        android:layout_width="450dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/weather_anim_cloudy"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/weather_backgroundRightImg"
+        android:layout_width="450dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/weather_anim_cloudy"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/activity_weather_linearlayout"

@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#504169E1">
+            android:background="@color/Grey">
 
             <ImageView
                 android:id="@+id/weather_other_feelsImg"

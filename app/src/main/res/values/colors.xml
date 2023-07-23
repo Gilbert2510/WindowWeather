@@ -7,6 +7,7 @@
     <color name="TestColor">#FF3399ff</color>
     <color name="Grey">#60FFFFFF</color>
     <color name="HalfGrey">#85FFFFFF</color>
+    <color name="FillGrey">#A9A9A9</color>
     <color name="Orange">#FFD700</color>
     <color name="Blue">#4169E1</color>
     <color name="JackieBlue">#0B1746</color>
@@ -20,4 +21,11 @@
     <color name="Night_top">#494F6F</color>
     <color name="Night_mid">#051843</color>
     <color name="Night_bottom">#2D3656</color>
+    <color name="DayRain_top">#1A2C5A</color>
+    <color name="DayRain_mid">#3D5480</color>
+    <color name="DayRain_bottom">#7D95BD</color>
+    <color name="FillCloudy_top">#2E4F82</color>
+    <color name="FillCloudy_mid">#6F8EC4</color>
+    <color name="FillCloudy_bottom">#C1D1F2</color>
+    <color name="HalfBlack">#BB000000</color>
 </resources>
