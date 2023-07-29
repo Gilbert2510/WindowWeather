@@ -90,7 +90,6 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
         /**
          * 显示搜索城市列表
          * 响应搜索系统action进行查找
-         * 此时显示从服务器搜索得到的数据
          */
         searchList = LitePal.findAll(CitySearch.class);
         searchAdapter = new SearchAdapter(this, searchList);
@@ -214,105 +213,6 @@ public class CitySearchActivity extends AppCompatActivity implements SearchView.
         return true;
     }
 
-//    /**
-//     * 连接服务器时显示对话框
-//     */
-//    private void showWaitingDialog() {
-//        //toDo
-//    }
-
-//    /**
-//     * 显示查询城市的结果
-//     */
-//    public void showCityInfo(GeoBean geoBean) {
-//        List<GeoBean.LocationBean> locationBeanList=geoBean.getLocationBean();
-//        CitySearch city=new CitySearch();
-//        //第一次搜索服务器的数据存入数据库
-//        for(GeoBean.LocationBean bean:locationBeanList) {
-//            String name=bean.getName();
-//            String adm2=bean.getAdm2();
-//            String adm1=bean.getAdm1();
-//            String country=bean.getCountry();
-//            String areaName=name+"-"+adm2+"-"+adm1+"-"+country;
-//            city.setCityId(bean.getId());
-//            city.setCityName(name);
-//            city.setCityAdm2(adm2);
-//            city.setCityAdm1(adm1);
-//            city.setCityCountry(country);
-//            city.setAreaName(areaName);
-//            searchList.add(city);
-//            city.save();
-//        }
-//    }
-//
-//    /**
-//     * 查询城市
-//     */
-//    public void queryCitySearch(Context context, String location) {
-//        QWeather.getGeoCityLookup(context, location, new QWeather.OnResultGeoListener() {
-//            public static final String TAG = "city_search";
-//
-//            @Override
-//            public void onError(Throwable throwable) {
-//                Log.i(TAG, "on error: ", throwable);
-//                //System.out.println("City Search Error:"+new Gson());
-//                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onSuccess(GeoBean geoBean) {
-//                Log.i(TAG, "getCity onSuccess: " + new Gson().toJson(geoBean));
-//                //System.out.println("获取城市成功"+new Gson().toJson(geoBean));
-//                //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
-//                if (Code.OK == geoBean.getCode()) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            showCityInfo(geoBean);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//    }
-
-
-//    /**
-//     * 查询热门城市
-//     */
-//    private void queryCityHot(Context context) {
-//        QWeather.getGeoTopCity(context, 20, Range.CN, ZH_HANS, new QWeather.OnResultGeoListener() {
-//            public static final String TAG = "city_hot_search";
-//
-//            @Override
-//            public void onError(Throwable throwable) {
-//                Log.i(TAG, "on error: ", throwable);
-//                //System.out.println("City Hot Search Error:"+new Gson());
-//                Toast.makeText(context, "连接服务器失败", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onSuccess(GeoBean geoBean) {
-//                Log.i(TAG, "getHotCity onSuccess: " + new Gson().toJson(geoBean));
-//                //System.out.println("获取热门城市成功"+new Gson().toJson(geoBean));
-//                if (Code.OK == geoBean.getCode()) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            List<GeoBean.LocationBean> locationBeanList = geoBean.getLocationBean();
-//                            for (GeoBean.LocationBean bean : locationBeanList) {
-//                                CityHot cityHot = new CityHot();
-//                                cityHot.setCityName(bean.getName());
-//                                cityHot.setCityId(bean.getId());
-//                                //更新数据库
-//                                cityHot.save();
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//    }
 
     /**
      * 查询当前城市信息并储存数据库

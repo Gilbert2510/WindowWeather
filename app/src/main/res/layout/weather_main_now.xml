@@ -39,7 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weather_main_now_temp"
-        android:layout_alignEnd="@id/weather_main_now_temp"
+        android:layout_toEndOf="@id/weather_main_now_tempText"
+        android:layout_marginStart="10dp"
         android:text="- ~ - ℃"
         android:textColor="@color/white"
         android:textSize="20sp" />

@@ -22,6 +22,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -104,6 +105,17 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         SysApplication.getInstance().addActivity(this);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+//手机宽度dp值 = 手机实际宽度像素px / 手机屏幕密度比
+        float widthDP = dm.widthPixels / dm.density;
+// dm.heightPixels 表示手机实际高度像素px
+        float heightDP = dm.heightPixels / dm.density;
+        Log.d("MainActivity", "手机屏幕宽度/dp是: "+widthDP);
+        Log.d("MainActivity", "手机实际宽度像素dp是: "+dm.widthPixels);
+        Log.d("MainActivity", "手机屏幕密度比是: "+dm.density);
+        Log.d("MainActivity", "手机屏幕显示dpi是: "+dm.densityDpi);
+
 
         //注册网络状态监听广播
         netWorkReceiver = new NetworkChangeReceiver();
